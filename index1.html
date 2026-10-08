@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QueueLess | Smart Campus Queue</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f6f8fb;
+            color: #172033;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            border-bottom: 1px solid #e8ebf0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #172033;
+        }
+
+        .logo span {
+            color: #4f46e5;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #5b6475;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #4f46e5;
+        }
+
+        .admin-btn {
+            border: none;
+            background: #172033;
+            color: white;
+            padding: 10px 17px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* HERO */
+
+        .hero {
+            max-width: 1100px;
+            margin: auto;
+            padding: 80px 25px 50px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero-small {
+            color: #4f46e5;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #4f46e5;
+        }
+
+        .hero p {
+            color: #697386;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 550px;
+        }
+
+        .hero-buttons {
+            margin-top: 28px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #4f46e5;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .secondary-btn {
+            border: 1px solid #d9dde6;
+            background: white;
+            color: #172033;
+            padding: 14px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        /* QUEUE PREVIEW */
+
+        .queue-preview {
+            background: white;
+            border: 1px solid #e7eaf0;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .queue-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .service-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .open-status {
+            color: #16834b;
+            background: #e8f8ef;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .current-box {
+            background: #f4f5ff;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .current-box small {
+            color: #687083;
+        }
+
+        .current-number {
+            font-size: 54px;
+            font-weight: bold;
+            color: #4f46e5;
+            margin: 5px 0;
+        }
+
+        .queue-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            border: 1px solid #eceef3;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .stat small {
+            color: #7b8495;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        /* MAIN */
+
+        section {
+            max-width: 1100px;
+            margin: auto;
+            padding: 70px 25px;
+        }
+
+        .section-title {
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #737c8e;
+        }
+
+        /* MY QUEUE */
+
+        .my-queue {
+            background: #172033;
+            color: white;
+            border-radius: 18px;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .my-card {
+            background: #222c42;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .my-card small {
+            color: #aeb7c8;
+        }
+
+        .my-card h3 {
+            font-size: 30px;
+            margin-top: 8px;
+        }
+
+        /* WARNING */
+
+        .warning {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 10px;
+            background: #fff7df;
+            border: 1px solid #f0d98a;
+            color: #735800;
+            display: none;
+        }
+
+        .warning strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* HOW IT WORKS */
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .step {
+            background: white;
+            border: 1px solid #e8ebf0;
+            padding: 25px;
+            border-radius: 14px;
+        }
+
+        .step-number {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eeeeff;
+            color: #4f46e5;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .step h3 {
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #727b8c;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* ADMIN */
+
+        .admin-panel {
+            background: white;
+            border: 1px solid #e5e8ee;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 600px;
+        }
+
+        .admin-token {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4f46e5;
+            margin: 15px 0;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* MODAL */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 20, 30, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 430px;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 10px;
+        }
+
+        .modal-content p {
+            color: #737c8e;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            float: right;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #172033;
+            color: white;
+            padding: 30px 7%;
+            text-align: center;
+        }
+
+        footer p {
+            color: #aeb7c8;
+            font-size: 14px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 50px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .my-queue {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <div class="logo">
+            Queue<span>Less</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#queue">My Queue</a>
+            <a href="#how">How It Works</a>
+            <button class="admin-btn" onclick="openAdmin()">
+                Admin
+            </button>
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+
+    <main id="home">
+
+        <div class="hero">
+
+            <div>
+
+                <div class="hero-small">
+                    SMART CAMPUS QUEUE
+                </div>
+
+                <h1>
+                    Don't wait in line.
+                    <span>Wait for your turn.</span>
+                </h1>
+
+                <p>
+                    QueueLess helps students join a digital queue,
+                    track their position and know when it is the
+                    right time to visit.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button
+                        class="primary-btn"
+                        onclick="joinQueue()">
+                        Join Canteen Queue
+                    </button>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="scrollToQueue()">
+                        View My Queue
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LIVE QUEUE CARD -->
+
+            <div class="queue-preview">
+
+                <div class="queue-top">
+
+                    <div class="service-name">
+                        🍱 College Canteen
+                    </div>
+
+                    <div class="open-status">
+                        ● OPEN
+                    </div>
+
+                </div>
+
+
+                <div class="current-box">
+
+                    <small>
+                        NOW SERVING
+                    </small>
+
+                    <div
+                        class="current-number"
+                        id="currentNumber">
+                        #24
+                    </div>
+
+                    <small>
+                        Queue is moving normally
+                    </small>
+
+                </div>
+
+
+                <div class="queue-stats">
+
+                    <div class="stat">
+                        <small>Your Token</small>
+                        <strong id="previewToken">--</strong>
+                    </div>
+
+                    <div class="stat">
+                        <small>People Ahead</small>
+                        <strong id="previewAhead">--</strong>
+                    </div>
+
+                    <div class="stat">
+                        <small>Est. Wait</small>
+                        <strong id="previewWait">--</strong>
+                    </div>
+
+                    <div class="stat">
+                        <small>Closes At</small>
+                        <strong>1:30 PM</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MY QUEUE -->
+
+        <section id="queue">
+
+            <div class="section-title">
+
+                <h2>My Queue</h2>
+
+                <p>
+                    Your current position in the canteen queue.
+                </p>
+
+            </div>
+
+
+            <div class="my-queue">
+
+                <div class="my-card">
+
+                    <small>
+                        YOUR TOKEN
+                    </small>
+
+                    <h3 id="myToken">
+                        --
+                    </h3>
+
+                </div>
+
+
+                <div class="my-card">
+
+                    <small>
+                        PEOPLE AHEAD
+                    </small>
+
+                    <h3 id="myAhead">
+                        --
+                    </h3>
+
+                </div>
+
+
+                <div class="my-card">
+
+                    <small>
+                        ESTIMATED WAIT
+                    </small>
+
+                    <h3 id="myWait">
+                        --
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- CLOSING WARNING -->
+
+            <div
+                class="warning"
+                id="closingWarning">
+
+                <strong>
+                    ⚠ Queue Closing Soon
+                </strong>
+
+                The canteen closes at 1:30 PM.
+                Based on the current queue position,
+                your token may not be reached before closing.
+
+            </div>
+
+        </section>
+
+
+        <!-- HOW IT WORKS -->
+
+        <section id="how">
+
+            <div class="section-title">
+
+                <h2>How QueueLess Works</h2>
+
+                <p>
+                    Three simple steps to avoid unnecessary waiting.
+                </p>
+
+            </div>
+
+
+            <div class="steps">
+
+                <div class="step">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <h3>
+                        Join Queue
+                    </h3>
+
+                    <p>
+                        Select the service and get your
+                        digital token without physically
+                        standing in the queue.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <h3>
+                        Track Position
+                    </h3>
+
+                    <p>
+                        See your token number, people ahead
+                        and an estimated waiting time.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <h3>
+                        Come When Needed
+                    </h3>
+
+                    <p>
+                        Check the queue remotely and come
+                        when your turn is getting closer.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ADMIN SECTION -->
+
+        <section>
+
+            <div class="section-title">
+
+                <h2>
+                    Queue Control
+                </h2>
+
+                <p>
+                    Staff can update the currently serving token.
+                </p>
+
+            </div>
+
+
+            <div class="admin-panel">
+
+                <p>
+                    Currently Serving
+                </p>
+
+                <div
+                    class="admin-token"
+                    id="adminToken">
+                    #24
+                </div>
+
+                <div class="admin-actions">
+
+                    <button
+                        class="secondary-btn"
+                        onclick="previousToken()">
+                        ← Previous
+                    </button>
+
+                    <button
+                        class="primary-btn"
+                        onclick="nextToken()">
+                        Next Token →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ADMIN MODAL -->
+
+    <div
+        class="modal"
+        id="adminModal">
+
+        <div class="modal-content">
+
+            <button
+                class="close"
+                onclick="closeAdmin()">
+                ×
+            </button>
+
+            <h2>
+                Admin Queue Control
+            </h2>
+
+            <p>
+                Update the token currently being served.
+            </p>
+
+            <div
+                class="admin-token"
+                id="modalToken">
+                #24
+            </div>
+
+            <button
+                class="primary-btn"
+                onclick="nextToken()">
+                Serve Next Token
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h3>
+            QueueLess
+        </h3>
+
+        <p>
+            A simple digital queue solution for campus life.
+        </p>
+
+        <p style="margin-top:10px;">
+            Built as a student project.
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        /*
+            QUEUE DATA
+
+            In this prototype:
+            Current serving token = 24
+            New student gets token = 25
+        */
+
+        let currentToken = 24;
+        let nextTokenNumber = 25;
+
+        let userToken = null;
+
+
+        /* JOIN QUEUE */
+
+        function joinQueue() {
+
+            if (userToken !== null) {
+
+                alert(
+                    "You are already in the queue with token #" +
+                    userToken
+                );
+
+                scrollToQueue();
+
+                return;
+            }
+
+
+            userToken = nextTokenNumber;
+
+            nextTokenNumber++;
+
+
+            updateQueue();
+
+
+            alert(
+                "Queue joined successfully!\n\n" +
+                "Your token number is #" +
+                userToken
+            );
+
+
+            scrollToQueue();
+        }
+
+
+        /* UPDATE ALL QUEUE INFORMATION */
+
+        function updateQueue() {
+
+            document.getElementById("currentNumber").innerText =
+                "#" + currentToken;
+
+            document.getElementById("adminToken").innerText =
+                "#" + currentToken;
+
+            document.getElementById("modalToken").innerText =
+                "#" + currentToken;
+
+
+            if (userToken === null) {
+
+                document.getElementById("previewToken").innerText =
+                    "--";
+
+                document.getElementById("previewAhead").innerText =
+                    "--";
+
+                document.getElementById("previewWait").innerText =
+                    "--";
+
+                document.getElementById("myToken").innerText =
+                    "--";
+
+                document.getElementById("myAhead").innerText =
+                    "--";
+
+                document.getElementById("myWait").innerText =
+                    "--";
+
+                return;
+            }
+
+
+            let peopleAhead =
+                userToken - currentToken - 1;
+
+
+            if (peopleAhead < 0) {
+                peopleAhead = 0;
+            }
+
+
+            /*
+                Approximate waiting time.
+
+                Here we assume:
+                1 token ≈ 2 minutes
+            */
+
+            let waitingTime =
+                peopleAhead * 2;
+
+
+            document.getElementById("previewToken").innerText =
+                "#" + userToken;
+
+            document.getElementById("previewAhead").innerText =
+                peopleAhead;
+
+            document.getElementById("previewWait").innerText =
+                waitingTime + " min";
+
+
+            document.getElementById("myToken").innerText =
+                "#" + userToken;
+
+            document.getElementById("myAhead").innerText =
+                peopleAhead;
+
+            document.getElementById("myWait").innerText =
+                waitingTime + " min";
+
+
+            /*
+                If estimated wait is more than 20 minutes,
+                show closing warning.
+            */
+
+            if (waitingTime >= 20) {
+
+                document.getElementById(
+                    "closingWarning"
+                ).style.display = "block";
+
+            } else {
+
+                document.getElementById(
+                    "closingWarning"
+                ).style.display = "none";
+
+            }
+
+
+            /*
+                If it is user's turn
+            */
+
+            if (userToken === currentToken) {
+
+                alert(
+                    "🔔 Your turn!\n\n" +
+                    "Please go to the canteen counter."
+                );
+
+            }
+
+        }
+
+
+        /* ADMIN - NEXT TOKEN */
+
+        function nextToken() {
+
+            currentToken++;
+
+            updateQueue();
+
+        }
+
+
+        /* ADMIN - PREVIOUS TOKEN */
+
+        function previousToken() {
+
+            if (currentToken > 1) {
+
+                currentToken--;
+
+                updateQueue();
+
+            }
+
+        }
+
+
+        /* SCROLL TO MY QUEUE */
+
+        function scrollToQueue() {
+
+            document
+                .getElementById("queue")
+                .scrollIntoView({
+                    behavior: "smooth"
+                });
+
+        }
+
+
+        /* OPEN ADMIN */
+
+        function openAdmin() {
+
+            document
+                .getElementById("adminModal")
+                .style.display = "flex";
+
+        }
+
+
+        /* CLOSE ADMIN */
+
+        function closeAdmin() {
+
+            document
+                .getElementById("adminModal")
+                .style.display = "none";
+
+        }
+
+
+        /* INITIAL LOAD */
+
+        updateQueue();
+
+    </script>
+
+</body>
+</html>
